@@ -1,7 +1,4 @@
-import json
 import re
-from constraint import Problem
-from tqdm import tqdm
 
 
 def words_presence_regex(words):
