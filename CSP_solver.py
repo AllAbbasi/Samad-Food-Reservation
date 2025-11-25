@@ -19,18 +19,12 @@ def solve_food_schedule(food_schedule, preferences, constraints=[], time_limit=N
     """
     
     # Ensure day_meals is consistent (sorting by day recommended if keys aren't sorted)
-    day_meals = list(food_schedule.keys())
-    this_week_foods = {food for foods in food_schedule.values() for food, *_ in foods}
-    preferences = match_short_to_full_foodnames(this_week_foods, preferences)
-    preferences = {food: len(preferences) - i for i, food in enumerate(preferences)}
-    print(f'User preferences:\n{preferences}')
-
-    
     print(f'User preferences:\n{preferences}')
     
     model = cp_model.CpModel()
     
     # --- 1. Variables & Basic Setup ---
+    day_meals = list(food_schedule.keys())    
     meal_vars = {}
     meal_to_options = {}
     option_to_details = {}

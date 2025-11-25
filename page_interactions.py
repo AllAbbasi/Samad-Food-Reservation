@@ -97,7 +97,7 @@ def reserve_food(page, day_identifier, meal_type, food_name, other_options=[], m
         bool: Success status
     """
     page.wait_for_selector('.program-reserve-item', timeout=10000)
-    page.wait_for_timeout(500)
+    page.wait_for_timeout(1000)
     
     for attempt in range(max_retries):
         # Find and click the reserve button for the specific day
@@ -196,6 +196,7 @@ def reserve_food(page, day_identifier, meal_type, food_name, other_options=[], m
                         return reserve_food(page, day_identifier, meal_type, other_options[0], other_options=other_options[1:], max_retries=3)
                 else:
                     print(f"Alert: {text.strip()}")
+                page.get_by_text(text.strip()).click()
         except:
             pass
         

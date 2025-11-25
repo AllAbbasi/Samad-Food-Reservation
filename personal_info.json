@@ -1,6 +1,7 @@
 {
-    "username": 403000000,
-    "password": 1234567890,
+    "university": "دانشگاه صنعتی شریف",
+    "username": "username",
+    "password": "password",
     "lunch-salons": ["مرکزی آقا", "کاله مرکزی", "سلیمانی"],
     "dinner-salons": ["سلیمانی"]
 }

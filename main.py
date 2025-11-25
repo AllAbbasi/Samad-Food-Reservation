@@ -8,24 +8,15 @@ from utils import *
 from page_interactions import *
 from CSP_solver import *
 from tqdm import tqdm
+import argparse
 
 
-with open("personal_info.json", "r") as file:
-    USER_INFO = json.load(file)
-
-with open("constraints.json", "r") as file:
-    CONSTRAINTS = json.load(file)
-
-with open("preferences.txt", "r") as file:
-    PREFERENCES = [line.strip() for line in file.readlines() if line.strip()]
-
-
-def run(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=False)
+def run(playwright: Playwright, args) -> None:
+    browser = playwright.chromium.launch(headless=args.quiet)
     context = browser.new_context()
     page = context.new_page()
     page.goto("https://samad.app/login")
-    page.get_by_text("دانشگاه صنعتی شریف").click()
+    page.get_by_text(USER_INFO['university']).click()
     page.get_by_text("ورود با نام کاربری و رمز عبور").click()
     # page.get_by_role("textbox", name="نام کاربری").click()
     page.get_by_role("textbox", name="نام کاربری").fill(str(USER_INFO["username"]))
@@ -55,6 +46,12 @@ def run(playwright: Playwright) -> None:
     
     # convertng preferences to full names
     this_week_foods = {food for foods in overall_food_schedule.values() for food, *_ in foods}
+    update_all_foods(this_week_foods)
+    if args.update:
+        print("Food schedule updated. Exiting as per --update flag.")
+        context.close()
+        browser.close()
+        return
     preferences = match_short_to_full_foodnames(this_week_foods, PREFERENCES)
     preferences = {food: len(preferences) - i for i, food in enumerate(preferences)}
 
@@ -83,6 +80,21 @@ def run(playwright: Playwright) -> None:
     browser.close()
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--quiet", action="store_true", help="Don't show the browser window")
+    parser.add_argument("--update", action="store_true", help="Only update the all_foods.txt with new foods appended, without making reservations")
+    args = parser.parse_args()
+
+
+    with open("personal_info.json", "r") as file:
+        USER_INFO = json.load(file)
+
+    with open("constraints.json", "r") as file:
+        CONSTRAINTS = json.load(file)
+
+    with open("preferences.txt", "r") as file:
+        PREFERENCES = [line.strip() for line in file.readlines() if line.strip()]
+
     validate(USER_INFO)
     with sync_playwright() as playwright:
-        run(playwright)
+        run(playwright, args)

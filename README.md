@@ -3,13 +3,12 @@
 ### Prerequisites
 
 ```bash
-# Optional
+# Optionally create and activate a virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+source venv/bin/activate  # On Windows `venv\Scripts\activate`
 
-pip install playwright
+pip install -r requirements.txt
 playwright install chromium
-pip install ortools
 ```
 
 ### Configuration
@@ -23,7 +22,8 @@ For example you can limit your fast food intake by something like this:
 ```json
 {
     "foods": ["پیتزا", "ناگت", "برگر", "ساندویچ"],
-    "limit": 2
+    "limit": 2,  # only twice a week
+    "gap": 2  # at least 2 meals (1 day) apart
 }
 ```
 
@@ -34,3 +34,12 @@ Run the main script in your environment:
 ```bash
 python main.py
 ```
+
+Additional command-line options:
+```
+--quiet     Don't show the browser window
+--update    Only update `all_foods.txt` with new foods appended, without making reservations
+```
+
+### To Do
+- [ ] Reserving dinners from both dorm and university (`سلف مرکزی بیرون بر`)

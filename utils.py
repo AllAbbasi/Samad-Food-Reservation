@@ -10,18 +10,6 @@ def words_presence_regex(words):
     return re.compile(pattern)
 
 
-# with open("./salons.json", "r") as file:
-#     SALONS = json.load(file)
-
-
-# def get_salon_number(salon):
-#     if salon.isdigit():
-#         return salon
-#     for number, name in SALONS.items():
-#         if re.match(words_presence_regex(salon), name):
-#             return number
-
-
 def match_short_to_full_foodnames(week_food, short_foodnames):
     """
     Match short food names to full names, selecting the shortest match when multiple exist.
@@ -111,3 +99,4 @@ def update_all_foods(this_week_foods):
         with open('all_foods.txt', 'a') as f:
             for food in sorted(new_foods):
                 f.write(food + '\n')
+            f.write('\n')  # Separate entries
