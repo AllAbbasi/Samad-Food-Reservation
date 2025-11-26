@@ -87,7 +87,7 @@ def validate(user_info):
 
 def update_all_foods(this_week_foods):
     try:
-        with open('all_foods.txt', 'r') as f:
+        with open('all_foods.txt', 'r', encoding="utf-8") as f:
             foods_sofar = {line.strip() for line in f if line.strip()}
     except FileNotFoundError:
         foods_sofar = set()
@@ -96,7 +96,7 @@ def update_all_foods(this_week_foods):
 
     # Append just the new ones
     if new_foods:
-        with open('all_foods.txt', 'a') as f:
+        with open('all_foods.txt', 'a', encoding="utf-8") as f:
             for food in sorted(new_foods):
                 f.write(food + '\n')
             f.write('\n')  # Separate entries
