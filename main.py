@@ -103,13 +103,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
 
-    with open("personal_info.json", "r", encoding="utf-8") as file:
+    with open("info/personal_info.json", "r", encoding="utf-8") as file:
         USER_INFO = json.load(file)
 
-    with open("constraints.json", "r", encoding="utf-8") as file:
+    with open("info/constraints.json", "r", encoding="utf-8") as file:
         CONSTRAINTS = json.load(file)
 
-    with open("preferences.txt", "r", encoding="utf-8") as file:
+    with open("info/preferences.txt", "r", encoding="utf-8") as file:
         PREFERENCES = [line.strip() for line in file.readlines() if line.strip()]
 
     validate(USER_INFO)
