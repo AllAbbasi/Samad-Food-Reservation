@@ -81,7 +81,7 @@ def get_foods_by_day_and_meal(page):
 
 
 
-def reserve_food(page, day_identifier, meal_type, food_name, other_options=[], max_retries=3):
+def reserve_food(page, day_identifier, meal_type, food_name, other_options=[], max_retries=7):
     """
     Reserve a food or increase quantity if already reserved (synchronous version).
     Filters by day to find the correct food item.

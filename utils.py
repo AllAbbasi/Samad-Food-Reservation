@@ -1,12 +1,16 @@
 import re
 
 
-def words_presence_regex(words):
+def words_presence_regex(words, whole_word=False):
     """Simple: check if all words are present in target."""
     if isinstance(words, str):
         words = words.split()
+    words = [w.strip().replace("(", "").replace(")", "") for w in words if w.strip()]
     # Just check each word is somewhere in the text
-    pattern = "".join(rf"(?=.*{re.escape(w)})" for w in words)
+    if whole_word:
+        pattern = "".join(rf"(?=.*\b{re.escape(w)}\b)" for w in words)
+    else:
+        pattern = "".join(rf"(?=.*{re.escape(w)})" for w in words)
     return re.compile(pattern)
 
 
