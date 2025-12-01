@@ -13,7 +13,7 @@ playwright install chromium
 
 ### Configuration
 
-Before running the script, make sure to fill out the following configuration files with your details:
+Before running the script, make sure to fill out the following configuration files in the folder `info` with your details:
 
 1.  **`personal_info.json`**: Add your login credentials and your preferred salons.
 2.  **`preferences.txt`**: List your food preferences. 
