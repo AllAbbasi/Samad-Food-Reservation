@@ -31,27 +31,44 @@ def run(playwright: Playwright, args) -> None:
     page.get_by_text("هفته بعد").click()
 
     overall_food_schedule : Dict[tuple, List[str]] = defaultdict(list)
+    partial = False
     for salon in (pbar := tqdm(set(USER_INFO["lunch-salons"] + USER_INFO["dinner-salons"]))):
         pbar.set_postfix_str(f"Getting foods from {salon}")
         page.locator(".flaticon-left-chevron").first.click()
         page.locator("div.self-list-item").filter(has_text=words_presence_regex(salon)).last.click()
-        expect(page.get_by_text("جزئیات بیشتر").first).to_be_visible()
         page.wait_for_timeout(1000)
 
+        # see if food plan is avialable:
+        locator = page.get_by_text("هیچ برنامه ی غذایی ای برای این تاریخ تعریف نشده است")
+        if locator.count() > 0:
+            print(f"No meal plan defined for {salon}")
+            partial = True
+            continue
+        expect(page.get_by_text("جزئیات بیشتر").first).to_be_visible()
         # dict{day : dict{meal: foods}}
         salon_schedule = get_foods_by_day_and_meal(page)
         normalized_salon_schedule = transform_food_schedule(salon_schedule, salon)
         for meal_day, foods in normalized_salon_schedule.items():
             overall_food_schedule[meal_day].extend(foods)
-    
+
     # convertng preferences to full names
     this_week_foods = {food for foods in overall_food_schedule.values() for food, *_ in foods}
     update_all_foods(this_week_foods)
+
+    should_reseve = True
+    if not overall_food_schedule:
+        print("No food is avialble yet")
+        should_reseve = False
     if args.update:
         print("Food schedule updated. Exiting as per --update flag.")
+        should_reseve = False
+    if should_reseve and partial:
+        should_reseve = input("Some salons are missing. Partial reserve? (Y/N)").lower() == 'y'
+    if not should_reseve:
         context.close()
         browser.close()
         return
+
     preferences = match_short_to_full_foodnames(this_week_foods, PREFERENCES)
     preferences = {food: len(preferences) - i for i, food in enumerate(preferences)}
 
